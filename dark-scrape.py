@@ -29,7 +29,7 @@ album_urls = [s.replace("..", "http://www.darklyrics.com")[1:-3] for s in artist
 fd = open(sys.argv[2], "w")
 
 for url in album_urls:
-    print(url)
+    print("Scraping: " + url)
     with urlopen(url) as ufd:
         album_html = ufd.read()
 
@@ -41,8 +41,15 @@ for url in album_urls:
     content.find("div", class_="thanks").decompose()
     content.find("div", class_="note").decompose()
 
-    print(header, file=fd)
-    print(content.get_text(), file=fd)
-    print("", file=fd)
+    #get rid of the "ARTIST LYRICS" thing
+    regex = re.compile(r'[A-Z ]*LYRICS')
+    text = regex.split(content.get_text())
+
+    print("*"*(len(header)+4), file=fd)
+    print("* "+header+" *", file=fd)
+    print("*"*(len(header)+4), file=fd)
+
+    for block in text:
+        fd.write(block)
 
 fd.close()
