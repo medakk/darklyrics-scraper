@@ -13,7 +13,7 @@ from bs4 import BeautifulSoup
 from urllib.request import urlopen
 
 if len(sys.argv)!=3 and len(sys.argv)!=2:
-    print("Usage: {} <URL to artist page> <output file>".format(sys.argv[0]), file=sys.stderr)
+    print("Usage: {} <URL to artist page> [<output file>]".format(sys.argv[0]), file=sys.stderr)
     sys.exit(1)
 
 url = sys.argv[1]
