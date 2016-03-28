@@ -12,7 +12,7 @@ import re
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 
-if len(sys.argv)!=3:
+if len(sys.argv)!=3 and len(sys.argv)!=2:
     print("Usage: {} <URL to artist page> <output file>".format(sys.argv[0]), file=sys.stderr)
     sys.exit(1)
 
@@ -26,7 +26,14 @@ artist_mo = artist_re.findall(artist_html)
 
 album_urls = [s.replace("..", "http://www.darklyrics.com")[1:-3] for s in artist_mo]
 
-fd = open(sys.argv[2], "w")
+file_name=None
+if len(sys.argv)==2:
+    artist_soup = BeautifulSoup(artist_html, "html.parser")
+    file_name = artist_soup.find("title").get_text() + ".txt"
+else:
+    file_name = sys.argv[2]
+
+fd = open(file_name, "w")
 
 for url in album_urls:
     print("Scraping: " + url)
