@@ -17,6 +17,8 @@ if len(sys.argv)!=3 and len(sys.argv)!=2:
     sys.exit(1)
 
 url = sys.argv[1]
+if not url.startswith("http://"):
+    url = "http://"+url
 
 with urlopen(url) as ufd:
     artist_html = ufd.read().decode("utf-8")
