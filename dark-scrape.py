@@ -5,7 +5,7 @@
 # for an artist.
 # Usage: dark-scraper.py <url to artist page> <output file>
 
-# TODO: Handle exceptions
+# TODO: Handle exceptions more gracefully
 
 import sys
 import re
@@ -36,29 +36,39 @@ else:
     file_name = sys.argv[2]
 
 fd = open(file_name, "w")
+error_urls = []
 
 for url in album_urls:
-    print("Scraping: " + url)
-    with urlopen(url) as ufd:
-        album_html = ufd.read()
+    try:
+        print("Scraping: " + url, file=sys.stderr)
+        with urlopen(url) as ufd:
+            album_html = ufd.read()
 
-    soup = BeautifulSoup(album_html, "html.parser")
+        soup = BeautifulSoup(album_html, "html.parser")
 
-    header = soup.find("h2").get_text()
+        header = soup.find("h2").get_text()
 
-    content = soup.find("div", class_="lyrics")
-    content.find("div", class_="thanks").decompose()
-    content.find("div", class_="note").decompose()
+        content = soup.find("div", class_="lyrics")
+        content.find("div", class_="thanks").decompose()
+        content.find("div", class_="note").decompose()
 
-    #get rid of the "ARTIST LYRICS" thing
-    regex = re.compile(r'[A-Z ]*LYRICS')
-    text = regex.split(content.get_text())
+        #get rid of the "ARTIST LYRICS" thing
+        regex = re.compile(r'[A-Z ]*LYRICS')
+        text = regex.split(content.get_text())
 
-    print("*"*(len(header)+4), file=fd)
-    print("* "+header+" *", file=fd)
-    print("*"*(len(header)+4), file=fd)
+        print("*"*(len(header)+4), file=fd)
+        print("* "+header+" *", file=fd)
+        print("*"*(len(header)+4), file=fd)
 
-    for block in text:
-        fd.write(block)
+        for block in text:
+            fd.write(block)
+    except Exception as e:
+        print("Error in page: {}".format(url), file=sys.stderr)
+        print(e, file=sys.stderr)
+        error_urls.append(url)
+
+if error_urls:
+    print("\nError parsing the following pages:",file=sys.stderr)
+    print(*error_urls, sep='\n',file=sys.stderr)
 
 fd.close()
