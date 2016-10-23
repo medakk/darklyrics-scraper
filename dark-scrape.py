@@ -49,8 +49,12 @@ for url in album_urls:
         header = soup.find("h2").get_text()
 
         content = soup.find("div", class_="lyrics")
-        content.find("div", class_="thanks").decompose()
-        content.find("div", class_="note").decompose()
+        try:
+            content.find("div", class_="thanks").decompose()
+            content.find("div", class_="note").decompose()
+        except:
+            pass # no thanks or note found. No problem, we were trying
+                 # to get rid of it anyway
 
         #get rid of the "ARTIST LYRICS" thing
         regex = re.compile(r'[A-Z ]*LYRICS')
