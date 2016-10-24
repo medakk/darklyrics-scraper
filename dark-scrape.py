@@ -4,6 +4,7 @@
 # Downloads the lyrics for all the songs in a darklyrics page
 # for an artist.
 # Usage: dark-scraper.py <url to artist page> <output file>
+# or:    dark-scraper.py <artist name>        <output file> 
 
 # TODO: Handle exceptions more gracefully
 
@@ -16,9 +17,18 @@ if len(sys.argv)!=3 and len(sys.argv)!=2:
     print("Usage: {} <URL to artist page> [<output file>]".format(sys.argv[0]), file=sys.stderr)
     sys.exit(1)
 
-url = sys.argv[1]
-if not url.startswith("http://"):
-    url = "http://"+url
+# Figure out the URL to use
+source_arg = sys.argv[1]
+if source_arg.startswith("http://"):
+    url = source_arg
+elif source_arg.startswith("www."):
+    url = "http://"+source_arg
+elif source_arg.startswith("darklyrics.com"):
+    url = "http://www."+source_arg
+else:
+    source_arg = source_arg.lower().replace(' ', '')
+    url = "http://www.darklyrics.com/{}/{}.html".format(source_arg[0], source_arg)
+print("Accessing {}".format(url), file=sys.stderr)
 
 with urlopen(url) as ufd:
     artist_html = ufd.read().decode("utf-8")
