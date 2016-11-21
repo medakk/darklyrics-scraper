@@ -3,8 +3,8 @@
 
 # Downloads the lyrics for all the songs in a darklyrics page
 # for an artist.
-# Usage: dark-scraper.py <url to artist page> <output file>
-# or:    dark-scraper.py <artist name>        <output file> 
+# Usage: dark-scraper.py <url to artist page> [<output file>]
+# or:    dark-scraper.py <artist name>        [<output file>]
 
 # TODO: Handle exceptions more gracefully
 
