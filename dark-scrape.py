@@ -61,9 +61,13 @@ for url in album_urls:
         content = soup.find("div", class_="lyrics")
         try:
             content.find("div", class_="thanks").decompose()
+        except:
+            pass # no thanks found. No problem, we were trying
+                 # to get rid of it anyway
+        try:
             content.find("div", class_="note").decompose()
         except:
-            pass # no thanks or note found. No problem, we were trying
+            pass # no "note" found. No problem, we were trying
                  # to get rid of it anyway
 
         #get rid of the "ARTIST LYRICS" thing
