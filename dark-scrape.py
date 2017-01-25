@@ -9,9 +9,10 @@
 import sys
 import re
 import threading
-from queue import PriorityQueue
-from bs4 import BeautifulSoup
 from urllib.request import urlopen
+from queue import PriorityQueue
+
+from bs4 import BeautifulSoup
 
 if len(sys.argv)!=3 and len(sys.argv)!=2:
     print("Usage: {} <URL to artist page> [<output file>]".format(sys.argv[0]), file=sys.stderr)
